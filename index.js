@@ -1,4 +1,3 @@
-// Function to hash password using SHA-256
 function sha256(plain) {
   return crypto.subtle
     .digest("SHA-256", new TextEncoder().encode(plain))
@@ -9,12 +8,9 @@ function sha256(plain) {
       return hash;
     });
 }
-
-// Function to save username and hashed password to a text file
 function saveCredentials(event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+  event.preventDefault(); 
 
-  // Retrieve username and password from the form
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 

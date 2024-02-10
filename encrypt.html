@@ -3,11 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Encrypt</title>
+    <title>Encrypt/Decrypt</title>
   </head>
   <body>
     <div class="container">
-        
+      <h1>Encrypt</h1>
+      <form id="encrypt-form">
+        <textarea name="Data" id="encrypt-data" cols="30" rows="10"></textarea>
+        <button type="submit">Encrypt</button>
+      </form>
+      <h1>Decrypt</h1>
+      <form id="decrypt-form">
+        <input type="file" id="encrypted-file-input" />
+        <button type="submit">Decrypt</button>
+      </form>
+      <div id="decrypted-text-container"></div>
     </div>
+
+    <script src="crypto.js"></script>
   </body>
 </html>
