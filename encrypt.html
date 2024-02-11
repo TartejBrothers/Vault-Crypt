@@ -4,22 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Encrypt/Decrypt</title>
+    <link rel="stylesheet" href="styles/encrypt.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Encrypt</h1>
+      <div class="header"><h1>Encrypt/Decrypt</h1></div>
+
       <form id="encrypt-form">
-        <textarea name="Data" id="encrypt-data" cols="30" rows="10"></textarea>
+        <textarea
+          name="Data"
+          id="encrypt-data"
+          cols="30"
+          rows="10"
+          placeholder="Enter Your Data here"
+        ></textarea>
         <button type="submit">Encrypt</button>
       </form>
-      <h1>Decrypt</h1>
+
       <form id="decrypt-form">
         <input type="file" id="encrypted-file-input" />
         <button type="submit">Decrypt</button>
       </form>
-      <div id="decrypted-text-container"></div>
+      <div id="decrypted-text-container" class="decryptedtext"></div>
     </div>
 
-    <script src="crypto.js"></script>
+    <script src="js/crypto.js"></script>
   </body>
 </html>

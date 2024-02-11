@@ -4,13 +4,12 @@ window.onload = function () {
   const decryptedTextContainer = document.getElementById(
     "decrypted-text-container"
   );
+  decryptedTextContainer.style.padding = "20px";
 
-  let encryptionKey = null; 
+  let encryptionKey = null;
 
   function getEncryptionKey() {
-
     if (!encryptionKey) {
-
       encryptionKey = window.crypto.subtle.generateKey(
         { name: "AES-GCM", length: 256 },
         true,
@@ -23,10 +22,11 @@ window.onload = function () {
   encryptForm.addEventListener("submit", async function (event) {
     event.preventDefault();
     const dataTextarea = document.getElementById("encrypt-data");
+
     const data = dataTextarea.value;
 
     try {
-      const key = await getEncryptionKey(); 
+      const key = await getEncryptionKey();
       const encryptedData = await encryptData(data, key);
       downloadEncryptedData(encryptedData);
     } catch (error) {
@@ -46,7 +46,7 @@ window.onload = function () {
     }
 
     try {
-      const key = await getEncryptionKey(); 
+      const key = await getEncryptionKey();
       const encryptedData = await readFileAsText(file);
       const decryptedData = await decryptData(encryptedData, key);
       decryptedTextContainer.textContent = decryptedData;
