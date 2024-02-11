@@ -39,8 +39,7 @@ app.get("/", (req, res) => {
 //     }
 //   });
 // });
-const uri =
-  "mongodb+srv://tartejbros:Rr5rnp6PAQng3lHr@todoapp.wrcgueg.mongodb.net/tododb?retryWrites=true&w=majority";
+const uri = "";
 
 app.post("/saveData", async (req, res) => {
   const { username, hashedPassword } = req.body;
