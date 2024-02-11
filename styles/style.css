@@ -21,7 +21,7 @@ body {
 .container {
   width: 50%;
   height: 400px;
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 20px;
@@ -33,7 +33,8 @@ body {
   width: 50%;
   background-position: 0%;
   background: url("../images/loginbg.jpeg");
-  background-image: contain;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #ffffff;
   flex-direction: column;
   display: flex;
