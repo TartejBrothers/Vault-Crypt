@@ -32,7 +32,7 @@ body {
   height: 100%;
   width: 50%;
   background-position: 0%;
-  background: url("images/loginbg.jpeg");
+  background: url("../images/loginbg.jpeg");
   background-image: contain;
   color: #ffffff;
   flex-direction: column;
