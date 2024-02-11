@@ -9,7 +9,7 @@ function sha256(plain) {
     });
 }
 function saveCredentials(event) {
-  event.preventDefault(); 
+  event.preventDefault();
 
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
@@ -21,12 +21,13 @@ function saveCredentials(event) {
         hashedPassword: hashedPassword,
       };
 
-      fetch("http://localhost:3000/saveData", {
+      fetch("https://vault-crypt.vercel.app/saveData", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        mode: "cors",
       })
         .then((response) => response.text())
         .then((result) => {
