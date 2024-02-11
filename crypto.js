@@ -5,24 +5,50 @@ window.onload = function () {
     "decrypted-text-container"
   );
 
+  let encryptionKey = null; 
+
+  function getEncryptionKey() {
+
+    if (!encryptionKey) {
+
+      encryptionKey = window.crypto.subtle.generateKey(
+        { name: "AES-GCM", length: 256 },
+        true,
+        ["encrypt", "decrypt"]
+      );
+    }
+    return encryptionKey;
+  }
+
   encryptForm.addEventListener("submit", async function (event) {
     event.preventDefault();
     const dataTextarea = document.getElementById("encrypt-data");
     const data = dataTextarea.value;
-    const encryptedData = await encryptData(data);
-    downloadEncryptedData(encryptedData);
+
+    try {
+      const key = await getEncryptionKey(); 
+      const encryptedData = await encryptData(data, key);
+      downloadEncryptedData(encryptedData);
+    } catch (error) {
+      console.error("Error encrypting data:", error);
+      alert("Error encrypting data. Please check the console for details.");
+    }
   });
 
   decryptForm.addEventListener("submit", async function (event) {
     event.preventDefault();
     const fileInput = document.getElementById("encrypted-file-input");
     const file = fileInput.files[0];
-    console.log("File selected:", file);
-    const encryptedData = await readFileAsArrayBuffer(file);
-    console.log("Encrypted data ArrayBuffer:", encryptedData);
+
+    if (!file) {
+      alert("Please select a file to decrypt.");
+      return;
+    }
+
     try {
-      const decryptedData = await decryptData(encryptedData);
-      console.log("Decrypted data:", decryptedData);
+      const key = await getEncryptionKey(); 
+      const encryptedData = await readFileAsText(file);
+      const decryptedData = await decryptData(encryptedData, key);
       decryptedTextContainer.textContent = decryptedData;
     } catch (error) {
       console.error("Error decrypting data:", error);
@@ -30,13 +56,7 @@ window.onload = function () {
     }
   });
 
-  async function encryptData(data) {
-    const key = await window.crypto.subtle.generateKey(
-      { name: "AES-GCM", length: 256 },
-      true,
-      ["encrypt", "decrypt"]
-    );
-
+  async function encryptData(data, key) {
     const encoder = new TextEncoder();
     const encodedData = encoder.encode(data);
 
@@ -48,22 +68,21 @@ window.onload = function () {
       encodedData
     );
 
-    const combinedData = new Uint8Array(iv.length + encryptedData.byteLength);
-    combinedData.set(iv, 0);
-    combinedData.set(new Uint8Array(encryptedData), iv.length);
+    const concatenatedData = new Uint8Array([
+      ...iv,
+      ...new Uint8Array(encryptedData),
+    ]);
+    const base64Data = btoa(String.fromCharCode.apply(null, concatenatedData));
 
-    return combinedData;
+    return base64Data;
   }
 
-  async function decryptData(encryptedData) {
-    const key = await window.crypto.subtle.generateKey(
-      { name: "AES-GCM", length: 256 },
-      true,
-      ["encrypt", "decrypt"]
+  async function decryptData(encryptedData, key) {
+    const encryptedBytes = Uint8Array.from(atob(encryptedData), (c) =>
+      c.charCodeAt(0)
     );
-
-    const iv = encryptedData.slice(0, 12);
-    const encrypted = encryptedData.slice(12);
+    const iv = encryptedBytes.slice(0, 12);
+    const encrypted = encryptedBytes.slice(12);
 
     const decryptedData = await window.crypto.subtle.decrypt(
       { name: "AES-GCM", iv: iv },
@@ -77,7 +96,7 @@ window.onload = function () {
     return decryptedText;
   }
 
-  function readFileAsArrayBuffer(file) {
+  function readFileAsText(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = function (event) {
@@ -86,16 +105,16 @@ window.onload = function () {
       reader.onerror = function (event) {
         reject(event.target.error);
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsText(file);
     });
   }
 
   function downloadEncryptedData(data) {
-    const blob = new Blob([data], { type: "application/octet-stream" });
+    const blob = new Blob([data], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "encrypted_data.bin";
+    a.download = "encrypted_data.txt";
     document.body.appendChild(a);
     a.click();
     URL.revokeObjectURL(url);
